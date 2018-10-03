@@ -10,5 +10,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "foreman": "^3.0.1",
+    "nf": "0.0.3",
+    "nodemon": "^1.18.4",
+    "parcel": "^1.10.1"
+  },
+  "devDependencies": {}
 }

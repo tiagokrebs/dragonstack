@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import DragonAvatar from './DragonAvatar';
+import { fetchDragon } from '../actions/dragon';
 
 /* defaul para inicializaçao do componente antes da busca
 dos atributos no backend*/
@@ -50,12 +52,18 @@ class Dragon extends Component {
         */
         return (
             <div>
-                <Button onClick={this.fetchDragon}>New Dragon</Button>
-                <DragonAvatar dragon={this.state.dragon} />
+                <Button onClick={this.props.fetchDragon}>New Dragon</Button>
+                <DragonAvatar dragon={this.props.dragon} />
             </div>
         );
     }
 }
 
 // exporta Dragon para disponibilizar utilizaçao
-export default Dragon;
+export default connect(
+    // o que eu quero pegar da redux store => o que eu quero retornar a props
+    // um objeto de dragon => um objeto de dragon
+    ({ dragon }) => ({ dragon }),
+    // objeto com action creators
+    { fetchDragon }
+)(Dragon);

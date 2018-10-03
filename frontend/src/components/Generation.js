@@ -1,7 +1,8 @@
 // importações em React.js são diferentes 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { generationActionCreator } from '../actions/generation';
+import { fetchGeneration } from '../actions/generation';
+import fetchStates from '../reducers/fetchStates';
 
 // constantes de configuracao sao SCREAM CASE
 //const DEFAULT_GENERATION = { generationId: '', expiration: '' };
@@ -27,34 +28,11 @@ class Generation extends Component {
         clearTimeout(this.timer);
     }
 
-    // metodo para busca do valor do componente no backend
-    fetchGeneration = () => {
-        // endereço do backend é validado com cors
-        fetch('http://localhost:3000/generation')
-         // como é um Promisse .then e .catch
-         .then(response => response.json())
-         .then(json => { 
-             //console.log('json', json)
-             
-             // atualiza state do componente com a informaçao do backen
-             // sempre atualizar states com setState
-             //this.setState({ generation: json.generation }); //removido por uso da redux store
-
-             //
-             console.log('json.generation', json.generation);
-             this.props.dispatch(
-                 generationActionCreator(json.generation)
-             );
-            })
-         // em caso de erro na requisiçao
-         .catch(error => console.error('error', error));
-    };
-
     // metodo pata atualização periodica do componente via setTimeout
     // chama metodo de consulta do backend
     fecthNextGeneration = () => {
         // chama metodo de consulta do backend que atualiza state do componente
-        this.fetchGeneration();
+        this.props.fetchGeneration();
 
         // define delay para proxima atualizaçao de acordo com expiration atual - agora
         let delay = new Date(this.props.generation.expiration).getTime() - 
@@ -78,6 +56,14 @@ class Generation extends Component {
         //const { generation } = this.props; // nao funcionou
         const { generation } = this.props;
 
+        // render tipo loading...
+        // if (generation.status === fetchStates.fecthing) {
+        //     return <div>...</div>
+        // }
+
+        if (generation.status === fetch.error){
+            return <div>{generation.message}</div>;
+        }
 
         return (
             // renderizaçao html
@@ -89,12 +75,19 @@ class Generation extends Component {
     }
 }
 
+
+// passa a informacao para redux store que esse componente quer acessar o state atual
 const mapStateToProps = state => {
     const generation = state.generation;
 
     return { generation };
 };
 
-const componentConnector = connect(mapStateToProps);
+// metodo que permite ao componente acessar a redux store atravers de props
+const componentConnector = connect(
+    mapStateToProps, 
+    { fetchGeneration }
+    );
 
+// export para o componente combinado com a redux store atraves do metodo connect
 export default componentConnector(Generation);

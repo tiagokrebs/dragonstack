@@ -1,12 +1,7 @@
-import { GENERATION_ACTION_TYPE } from '../actions/types';
+import generation from './generation';
+import dragon from './dragon'
+import { combineReducers } from 'redux';
 
-const DEFAULT_GENERATION = { generationId: '', expiration: '' };
-
-// reducer para Redux
-export const generationReducer = (state, action) => {
-    if (action.type = GENERATION_ACTION_TYPE) {
-        return { generation: action.generation };
-    }
-
-    return { generation: DEFAULT_GENERATION };
-}
+export default combineReducers({
+    generation, dragon
+});
