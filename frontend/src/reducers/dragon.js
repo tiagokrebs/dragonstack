@@ -17,7 +17,7 @@ const dragon = (state = DEFAULT_DRAGON, action) => {
         case DRAGON.FETCH_ERROR:
             return { ...state, status: fectchStates.error, message: action.message };
         case DRAGON.FETCH_SUCCESS:
-            return { ...state, status: fetchStates.success, ...action.generation };
+            return { ...state, status: fetchStates.success, ...action.dragon };
         default:
             return state;
     };

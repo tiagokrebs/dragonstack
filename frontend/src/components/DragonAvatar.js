@@ -40,6 +40,8 @@ class DragonAvatar extends Component {
         // como o pai Dragon passou props para esse filho usasse this.props.
         const { generationId, dragonId, traits } = this.props.dragon;
 
+        if (!dragonId) return <div></div>;
+
         return (
             <div>
                 <span>G{generationId}.</span>
