@@ -1,12 +1,18 @@
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import { Router, Switch, Route, Redirect } from 'react-router';
 import { render } from 'react-dom';
 import thunk from 'redux-thunk';
+import createBrowserHistory from 'history/createBrowserHistory';
 import rootReducer from './reducers';
 import Root from './components/Root';
+import AccountDragons from './components/AccountDragons';
 import { fetchAuthenticated } from './actions/account';
 import './index.css';
+
+// history browser para uso de Router/Switch
+const history = createBrowserHistory();
 
 // strore Redux com passarem do reducer
 const store = createStore(
@@ -15,11 +21,26 @@ const store = createStore(
     applyMiddleware(thunk)
 );
 
+const AuthRoute = props => {
+    if (!store.getState().account.loggedIn) {
+        return <Redirect to={{ pathname: '/' }} />
+    }
+
+    const { component, path } = props;
+
+    return <Route path={path} component={component} />;
+}
+
 store.dispatch(fetchAuthenticated())
  .then(() => {
     render(
         <Provider store={store}>
-            <Root />
+            <Router history={history}>
+                <Switch>
+                    <Route exact path='/' component={Root} />
+                    <AuthRoute path='/account-dragons' component={AccountDragons} />
+                </Switch>
+            </Router>
         </Provider>,
         document.getElementById('root')
     );
