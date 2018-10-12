@@ -1,35 +1,39 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { fetchPublicDragons } from '../actions/publicDragons';
 import { fetchAccountDragons } from '../actions/accountDragons';
-import AccountDragonRow from './AccountDragonRow';
+import { Link } from 'react-router-dom';
+import PublicDragonRow from './PublicDragonRow';
 
-class AccountDragons extends Component {
+class PublicDragons extends Component {
     componentDidMount() {
+        this.props.fetchPublicDragons();
+        //carrega dragons na store para exibir em mates
         this.props.fetchAccountDragons();
     }
+
 
     render() {
         return (
             <div>
-                <h3>Account Dragons</h3>
+                <h3>Public Dragons</h3>
                 <Link to='/'>Home</Link>
                 {
-                    this.props.accountDragons.dragons.map(dragon => {
+                    this.props.publicDragons.dragons.map(dragon => {
                         return (
                             <div key={dragon.dragonId}>
-                                <AccountDragonRow dragon={dragon} />
+                                <PublicDragonRow dragon={dragon}/>
                                 <hr />
                             </div>
                         )
                     })
                 }
             </div>
-        );
+        )
     }
 }
 
 export default connect(
-    ({ accountDragons }) => ({ accountDragons }),
-    { fetchAccountDragons }
-)(AccountDragons);
+    ({ publicDragons }) => ({ publicDragons }),
+    { fetchPublicDragons, fetchAccountDragons }
+)(PublicDragons);
